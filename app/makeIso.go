@@ -38,9 +38,9 @@ func NewInitializer(workerDir string, osList []config.OsInfo) *Initializer {
 
 func GetOSConfig(osList []config.OsInfo) *config.OsInfo {
 	info, _ := host.Info()
+	log.Printf("%#v\n", info)
 	for _, osInfo := range osList {
 		log.Printf("%#v\n", osInfo)
-		log.Printf("%#v\n", info)
 		if osInfo.Version == info.PlatformVersion && osInfo.Id == info.Platform {
 			return &osInfo
 		}

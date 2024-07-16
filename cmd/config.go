@@ -17,7 +17,8 @@ var configCmd = &cobra.Command{
 		configFile, _ := cmd.Flags().GetString("config")
 		data, err := os.ReadFile(configFile)
 		if err != nil {
-			fmt.Print(string(config.DefaultConfig))
+			data = config.DefaultConfig
+			_ = os.WriteFile(configFile, data, 0644)
 		}
 		fmt.Print(string(data))
 	},
