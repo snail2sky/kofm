@@ -9,22 +9,17 @@ import (
 // osInfoCmd represents the osInfo command
 var osInfoCmd = &cobra.Command{
 	Use:   "os-info",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Print OS Information",
+	Long:  `Print OS Information`,
 	Run: func(cmd *cobra.Command, args []string) {
 		info, _ := host.Info()
-		//fmt.Println(info.OS)              // 操作系统类型
-		//fmt.Println(info.Platform)        // 操作系统平台
-		//fmt.Println(info.PlatformFamily)  // 操作系统平台家族
-		//fmt.Println(info.PlatformVersion) // 操作系统平台版本
-		//fmt.Println(info.HostID)
-		//fmt.Println(info.KernelArch)
-		fmt.Printf("%#v\n", *info)
+		fmt.Println("hostname:", info.Hostname)
+		fmt.Println("arch:", info.KernelArch)
+		fmt.Println("type:", info.OS)
+		fmt.Println("OS ID:", info.Platform)
+		fmt.Println("OS version:", info.PlatformVersion)
+		fmt.Println("OS platform family:", info.PlatformFamily)
+		fmt.Println("OS kernel version:", info.KernelVersion)
 	},
 }
 
