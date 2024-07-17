@@ -2,7 +2,6 @@ package app
 
 import (
 	"fmt"
-	"github.com/shirou/gopsutil/host"
 	"github.com/snail2sky/kofm/config"
 	"github.com/snail2sky/kofm/lib"
 	"log"
@@ -37,11 +36,9 @@ func NewInitializer(workerDir string, osList []config.OsInfo) *Initializer {
 }
 
 func GetOSConfig(osList []config.OsInfo) *config.OsInfo {
-	info, _ := host.Info()
-	log.Printf("%#v\n", info)
+	currentOSInfo := LoadOSInfo()
 	for _, osInfo := range osList {
-		log.Printf("%#v\n", osInfo)
-		if osInfo.Version == info.PlatformVersion && osInfo.Id == info.Platform {
+		if osInfo.Version == currentOSInfo["VERSION_ID"] && osInfo.Id == currentOSInfo["ID"] {
 			return &osInfo
 		}
 	}
@@ -50,9 +47,10 @@ func GetOSConfig(osList []config.OsInfo) *config.OsInfo {
 
 func NewPkgManager(osInfo *config.OsInfo) PkgManager {
 	var pkgMgr PkgManager
-	info, _ := host.Info()
+	currentOSInfo := LoadOSInfo()
 	if osInfo == nil {
-		log.Fatal("Not supported OS:", info.Platform, info.PlatformVersion)
+		log.Println("Not supported OS ID:", currentOSInfo["ID"])
+		log.Fatalln("Not supported OS VERSION:", currentOSInfo["VERSION_ID"])
 	}
 	switch osInfo.PkgInstaller {
 	case "yum":
@@ -132,8 +130,8 @@ type DpkgMgr struct {
 }
 
 func (i *RpmPkgMgr) Install(pkgs ...string) {
-	for index, pkg := range pkgs {
-		log.Println(index, "installing", pkg)
+	for _, pkg := range pkgs {
+		log.Println("installing", pkg)
 		err := exec.Command("yum", "-y", "install", pkg).Run()
 		if err != nil {
 			log.Printf("Error installing %s: %s\n", pkg, err)
@@ -149,8 +147,8 @@ func (i *RpmPkgMgr) DownloadPkg(rootDir string) {
 		log.Fatal(err)
 	}
 	log.Println("downloading", i.Initializer.PkgList)
-	for _, pkg := range i.Initializer.PkgList {
-		log.Println("downloading", pkg)
+	for index, pkg := range i.Initializer.PkgList {
+		log.Println(index, "downloading", pkg)
 		output, _ := exec.Command("repotrack", pkg).CombinedOutput()
 		log.Println(string(output))
 

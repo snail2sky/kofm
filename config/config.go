@@ -22,50 +22,6 @@ type OsInfo struct {
 	PkgList      []string `yaml:"pkg_list"`
 }
 
-var DefaultConfig = []byte(`os_list:
-  - name: rocky8
-    arch: x86_64
-    type: linux
-    id: rocky
-    version: 8.6
-    iso_path: rockylinux8-amd64.iso
-    pkg_mgr: rpm
-    pkg_installer: dnf
-    pkg_list:
-      - socat
-      - sudo
-      - curl
-      - openssl
-      - ebtables
-      - ipset
-      - ipvsadm
-      - conntrack
-      - keepalived
-      - haproxy
-
-  - name: ubuntu2004
-    arch: x86_64
-    type: linux
-    id: ubuntu
-    version: 20.04
-    iso_path: ubuntu2004-amd64.iso
-    pkg_mgr: dpkg
-    pkg_installer: apt
-    pkg_list:
-      - socat
-
-  - name: debian13
-    arch: x86_64
-    type: linux
-    id: debian
-    version: 13
-    iso_path: debian13-amd64.iso
-    pkg_mgr: dpkg
-    pkg_installer: apt
-    pkg_list:
-      - socat
-`)
-
 func LoadConfig(configPath string) []OsInfo {
 	var osInfo OsListInfo
 
